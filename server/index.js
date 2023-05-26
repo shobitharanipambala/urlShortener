@@ -13,12 +13,7 @@ app.get("/mappings", async (req, res) => {
     res.send(geturls);
 });
 
-//   if (foundData) {
-//     res.redirect(foundData.url);
-//   } else {
-//     res.status(404).send("Alias not found");
-//   }
-// });
+
 app.get("/r/:alias", async (req, res) => {
   const { alias } = req.params;
   const foundData = await Url.findOne({ alias: alias });
@@ -58,18 +53,8 @@ app.post('/shorten', async (req, res) => {
 
     res.send(`http://localhost:3000/r/${alias}`);
 });
-app.get("/r/:alias", async (req, res) => {
-  console.log(req.params)
-  const { alias } = req.params;
-  
-  const foundData = await Url.find({alias});
-  console.log(foundData.url)
-  if (foundData) {
-    res.redirect(foundData.url);
-  } else {
-    res.status(404).send("Alias not found");
-  }
-});
+
+
 
 
 app.get("/", (req, res) => {
