@@ -12,17 +12,14 @@ mongoose.connect(Mongo_url)
     console.log("error connecting to DB")
 })
 
-const urlSchema = new mongoose.Schema({
-    alias:{
-        type:String,
-        required:true,
-    },
-    url:{
-        type:String,
-        required:true,
-    }
-})
 
- const Url=mongoose.model("Url",urlSchema)
+
+
+const urlSchema = new mongoose.Schema({
+  alias: String,
+  url: String,
+});
+
+const Url = mongoose.model('Url', urlSchema)
 
 export default Url
