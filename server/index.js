@@ -25,16 +25,7 @@ app.get("/mappings", async (req, res) => {
 //     res.status(404).send("Alias not found");
 //   }
 // });
-app.get("/r/:alias", async (req, res) => {
-  const { alias } = req.params;
-  const foundData = await Url.findOne({ alias: alias });
-  console.log(foundData)
-  if (foundData) {
-    res.redirect(foundData.url);
-  } else {
-    res.status(404).send("Alias not found");
-  }
-});
+
 app.post("/map", (req, res) => {
   try {
     const { alias, url } = req.body;
@@ -67,6 +58,7 @@ app.post("/shorten", async (req, res) => {
   const urls = {};
   const alias = shortid.generate();
   urls[alias] = url;
+  console.log( urls[alias])
   const data = {
     alias,
     url,
@@ -74,6 +66,18 @@ app.post("/shorten", async (req, res) => {
   await Url.create(data);
 
   res.send(`http://localhost/3000/r/${alias}`);
+});
+app.get("/r/:alias", async (req, res) => {
+  console.log(req.params)
+  const { alias } = req.params;
+  
+  const foundData = await Url.find({alias});
+  console.log(foundData.url)
+  if (foundData) {
+    res.redirect(foundData.url);
+  } else {
+    res.status(404).send("Alias not found");
+  }
 });
 
 // const short = shortid.generate();
