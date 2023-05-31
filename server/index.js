@@ -1,5 +1,5 @@
 import express from "express";
-import { response } from "express";
+import {response} from "express";
 const app = express();
 import cors from "cors";
 import shortid from "shortid";
@@ -16,14 +16,14 @@ app.get("/mappings", async (req, res) => {
 
 
 app.get("/r/:alias", async (req, res) => {
-  const { alias } = req.params;
-  const foundData = await Url.findOne({ alias: alias });
-  console.log(foundData)
-  if (foundData) {
-    res.redirect(foundData.url);
-  } else {
-    res.status(404).send("Alias not found");
-  }
+    const {alias} = req.params;
+    const foundData = await Url.findOne({alias: alias});
+    console.log(foundData)
+    if (foundData) {
+        res.redirect(foundData.url);
+    } else {
+        res.status(404).send("Alias not found");
+    }
 });
 app.post("/map", (req, res) => {
     try {
@@ -41,7 +41,7 @@ app.post("/map", (req, res) => {
 });
 
 app.post('/shorten', async (req, res) => {
-    const {url} = req.body ;
+    const {url} = req.body;
 
     const urls = {};
     const alias = shortid.generate();
