@@ -7,22 +7,22 @@ import Url from "./model/url.js";
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-
-
 app.get("/mappings", async (req, res) => {
     const geturls = await Url.find();
     res.send(geturls);
 });
-
-
 app.get("/r/:alias", async (req, res) => {
-    const {alias} = req.params;
-    const foundData = await Url.findOne({alias: alias});
-    console.log(foundData)
-    if (foundData) {
-        res.redirect(foundData.url);
-    } else {
-        res.status(404).send("Alias not found");
+    try {
+        const {alias} = req.params;
+        const foundData = await Url.findOne({alias: alias});
+        if (foundData) {
+            res.redirect(foundData.url);
+        } else {
+            res.status(404).send("URL not found");
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("An error occurred");
     }
 });
 app.post("/map", (req, res) => {
@@ -39,28 +39,27 @@ app.post("/map", (req, res) => {
         res.send("error in post api");
     }
 });
-
 app.post('/shorten', async (req, res) => {
     const {url} = req.body;
-
     const urls = {};
     const alias = shortid.generate();
+    const shorternurl = `http://localhost:3000/r/${alias}`;
     urls[alias] = url;
-    console.log(urls[alias]);
+    urls[shorternurl] = url;
+    // console.log(urls[alias]);
     const data = {
         alias,
-        url
+        url,
+        shorternurl
     };
+    console.log(data.shorternurl);
     await Url.create(data);
-
-    res.send(`http://localhost:3000/r/${alias}`);
+    // res.send("shorturl creted");
+    res.json({ shortURL: shorternurl })
 });
-
-
 app.get("/", (req, res) => {
     res.send("welcome to urlshortner");
 });
-
 app.listen(3000, () => {
     console.log("listening on port 3000");
 });
