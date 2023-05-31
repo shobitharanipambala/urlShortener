@@ -1,4 +1,5 @@
-import express, {response} from "express";
+import express from "express";
+import { response } from "express";
 const app = express();
 import cors from "cors";
 import shortid from "shortid";
@@ -45,19 +46,35 @@ app.post("/map", (req, res) => {
 });
 
 app.post('/shorten', async (req, res) => {
-    const {url} = req.body;
+    const {url} = req.body ;
 
     const urls = {};
     const alias = shortid.generate();
-    urls[alias] = url;
-    console.log(urls[alias]);
+    const shorternurl  = `http://localhost:3000/r/${alias}`;
+    urls[alias] = url  ;
+    urls[shorternurl] = url;
+    // console.log(urls[alias]);
     const data = {
         alias,
-        url
+        url,
+        shorternurl 
+     
     };
+    console.log(data.shorternurl);
     await Url.create(data);
 
     res.send(`http://localhost:3000/r/${alias}`);
+});
+
+
+
+app.get('/shorten', async (req, res) => {
+    
+    const {shorternurl} = req.params;
+
+    const short= await Url.find({ shorternurl : shorternurl});
+   res.send("short");
+
 });
 
 

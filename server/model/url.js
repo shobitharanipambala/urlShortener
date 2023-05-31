@@ -18,6 +18,7 @@ mongoose.connect(Mongo_url)
 const urlSchema = new mongoose.Schema({
   alias: String,
   url: String,
+  shorternurl: String,
 });
 
 const Url = mongoose.model('Url', urlSchema)
