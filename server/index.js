@@ -14,22 +14,17 @@ app.get("/mappings", async (req, res) => {
     res.send(geturls);
 });
 
+
 app.get("/r/:alias", async (req, res) => {
-    try {
-        const {alias} = req.params;
-        const foundData = await Url.findOne({alias: alias});
-        if (foundData) {
-            res.redirect(foundData.url);
-        } else {
-            res.status(404).send("URL not found");
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("An error occurred");
-    }
+  const { alias } = req.params;
+  const foundData = await Url.findOne({ alias: alias });
+  console.log(foundData)
+  if (foundData) {
+    res.redirect(foundData.url);
+  } else {
+    res.status(404).send("Alias not found");
+  }
 });
-
-
 app.post("/map", (req, res) => {
     try {
         const {alias, url} = req.body;
@@ -50,31 +45,15 @@ app.post('/shorten', async (req, res) => {
 
     const urls = {};
     const alias = shortid.generate();
-    const shorternurl  = `http://localhost:3000/r/${alias}`;
-    urls[alias] = url  ;
-    urls[shorternurl] = url;
-    // console.log(urls[alias]);
+    urls[alias] = url;
+    console.log(urls[alias]);
     const data = {
         alias,
-        url,
-        shorternurl 
-     
+        url
     };
-    console.log(data.shorternurl);
     await Url.create(data);
 
     res.send(`http://localhost:3000/r/${alias}`);
-});
-
-
-
-app.get('/shorten', async (req, res) => {
-    
-    const {shorternurl} = req.params;
-
-    const short= await Url.find({ shorternurl : shorternurl});
-   res.send("short");
-
 });
 
 
