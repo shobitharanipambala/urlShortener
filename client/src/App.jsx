@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import './App.css';
 
 function ShortenURL() {
   const [url, setURL] = useState("");
@@ -52,19 +53,22 @@ function ShortenURL() {
   };
 
   return (
-    <div className="box">
-      <h1>POCOURL</h1>
+    <div >
+      
+      <h1 >POCO-URL</h1>
+      
       <input type="text" value={url} onChange={handleURLChange} />
       {error && <p className="error">{error}</p>} {/* Display error message if present */}
       <button onClick={handleShortenClick}>Shorten URL</button>
       {shortURL && (
-        <p>
+        <h2>
           Shortened URL:{" "}
           <a href={shortURL} onClick={handleRedirectClick}>
             {shortURL}
           </a>
-        </p>
+        </h2>
       )}
+     
     </div>
   );
 }

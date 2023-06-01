@@ -39,24 +39,36 @@ app.post("/map", (req, res) => {
         res.send("error in post api");
     }
 });
+
+
 app.post('/shorten', async (req, res) => {
-    const {url} = req.body;
-    const urls = {};
+    const { url } = req.body;
     const alias = shortid.generate();
     const shorternurl = `http://localhost:3000/r/${alias}`;
-    urls[alias] = url;
-    urls[shorternurl] = url;
-    // console.log(urls[alias]);
+
+    // Check if the alias already exists in the database
+    const existingUrl = await Url.findOne({ alias: alias });
+    if (existingUrl) {
+        // Alias already exists, generate a new one
+        return res.status(409).json({ error: 'Alias already exists' });
+    }
+
+
+    const existingUrlByUrl = await Url.findOne({ url: url });
+    if (existingUrlByUrl) {
+       
+        return res.json({ shortURL: existingUrlByUrl.shorternurl });
+    }
+
     const data = {
         alias,
         url,
         shorternurl
     };
-    console.log(data.shorternurl);
     await Url.create(data);
-    // res.send("shorturl creted");
-    res.json({ shortURL: shorternurl })
+    res.json({ shortURL: shorternurl });
 });
+
 app.get("/", (req, res) => {
     res.send("welcome to urlshortner");
 });
@@ -65,3 +77,4 @@ app.listen(3000, () => {
 });
 
   
+
