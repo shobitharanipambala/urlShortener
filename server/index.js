@@ -44,7 +44,7 @@ app.post("/map", (req, res) => {
 app.post('/shorten', async (req, res) => {
     const {url} = req.body;
     const alias = shortid.generate();
-    const shorternurl = `http://localhost:3000/r/${alias}`;
+    const shorternurl = `https://poco-url.onrender.com/r/${alias}`;
 
     // Check if the alias already exists in the database
     const existingUrl = await Url.findOne({alias: alias});

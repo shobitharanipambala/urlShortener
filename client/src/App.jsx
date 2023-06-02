@@ -22,7 +22,7 @@ function ShortenURL() {
                 setError("Please enter a valid URL");
                 return;
             }
-            const response = await fetch("http://localhost:3000/shorten", {
+            const response = await fetch("https://poco-url.onrender.com/shorten", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
