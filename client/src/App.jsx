@@ -1,18 +1,29 @@
 import React, {useState} from "react";
-import './App.css';
+import {css} from "@emotion/react";
+import {BounceLoader} from "react-spinners";
+import "./App.css";
+
+const override = css `
+display: block;
+margin-left: 100px;
+justify-content: center;
+align-items:center;
+
+`;
 
 function ShortenURL() {
     const [url, setURL] = useState("");
     const [shortURL, setShortURL] = useState("");
     const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleURLChange = (event) => {
         setURL(event.target.value);
-        setError(""); // Reset the error message when input changes
+        setError("");
     };
 
     const handleShortenClick = async () => {
-        try { // Validate URL input
+        try {
             if (!url) {
                 setError("Please enter a URL");
                 return;
@@ -22,6 +33,9 @@ function ShortenURL() {
                 setError("Please enter a valid URL");
                 return;
             }
+
+            setIsLoading(true);
+
             const response = await fetch("https://poco-url.onrender.com/shorten", {
                 method: "POST",
                 headers: {
@@ -40,6 +54,8 @@ function ShortenURL() {
             }
         } catch (error) {
             console.error(error);
+        } finally {
+            setIsLoading(false);
         }
 
         setURL("");
@@ -51,24 +67,39 @@ function ShortenURL() {
         }
     };
 
-    return (<div>
 
-        <h1>POCO-URL</h1>
+    return (
+        <div>
+            <h1>POCO-URL</h1>
 
-        <input type="text"
-            value={url}
-            onChange={handleURLChange}/> {
-        error && <p className="error"> {error}</p>
-    }
-        {/* Display error message if present */}
-        <button onClick={handleShortenClick}>Shorten URL</button>
-        {
-        shortURL && (<h2>
-            Shortened URL:{" "}
-            <a href={shortURL}
-                onClick={handleRedirectClick}> {shortURL} </a>
-        </h2>)
-    } </div>);
+            {
+            isLoading ? (
+                <BounceLoader color="#1B9C85"
+                    css={override}
+                    size={100}/>
+            ) : (
+                <>
+                    <input type="text"
+                        value={url}
+                        onChange={handleURLChange}/> {
+                    error && <p className="error">
+                        {error}</p>
+                }
+                    <button onClick={handleShortenClick}>Shorten URL</button>
+                    {
+                    shortURL && (
+                        <h2>
+                            Shortened URL:{" "}
+                            <a href={shortURL}
+                                onClick={handleRedirectClick}>
+                                {shortURL} </a>
+                        </h2>
+                    )
+                } </>
+            )
+        } </div>
+    );
 }
 
 export default ShortenURL;
+
